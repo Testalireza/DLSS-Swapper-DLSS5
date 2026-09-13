@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Content-Security-Policy is served as an HTTP header by the web
+       dev-preview server; under Electron (file://) the renderer is fully
+       sandboxed via contextIsolation + disabled nodeIntegration instead. -->
+  <title>DLSS Swapper 5</title>
+  <link rel="icon" type="image/png" href="../../resources/icons/icon.png" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div id="app" class="app-shell" aria-busy="true">
+    <!-- ======================= Sidebar ======================= -->
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="sidebar-brand">
+        <img src="../../resources/icons/icon.png" alt="" class="brand-icon" onerror="this.style.display='none'" />
+        <div class="brand-text">
+          <span class="brand-name">DLSS Swapper 5</span>
+          <span class="brand-sub">Neural Rendering Manager</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <a class="nav-item" href="#/games" data-route="games">
+          <svg viewBox="0 0 24 24" class="nav-icon" aria-hidden="true"><path d="M6 9h2m-1-1v2m7-1h.01M17 11h.01M7.5 6h9A5.5 5.5 0 0 1 22 11.5v0a4 4 0 0 1-4 4c-1.2 0-2-.6-2.8-1.4l-.9-.9a2 2 0 0 0-2.6 0l-.9.9C10 14.9 9.2 15.5 8 15.5a4 4 0 0 1-4-4v0A5.5 5.5 0 0 1 7.5 6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Games</span>
+          <span class="nav-badge" id="nav-games-count" hidden>0</span>
+        </a>
+        <a class="nav-item" href="#/dlss5" data-route="dlss5">
+          <svg viewBox="0 0 24 24" class="nav-icon" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3zm6.5 10l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9.9-2.3zM5 15l.7 1.8L7.5 17.5l-1.8.7L5 20l-.7-1.8L2.5 17.5l1.8-.7L5 15z" fill="currentColor"/></svg>
+          <span>DLSS 5 Neural</span>
+        </a>
+        <a class="nav-item" href="#/runtimes" data-route="runtimes">
+          <svg viewBox="0 0 24 24" class="nav-icon" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5zm9 9l-9 5-9-5m18 4l-9 5-9-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Runtimes</span>
+        </a>
+        <a class="nav-item" href="#/backups" data-route="backups">
+          <svg viewBox="0 0 24 24" class="nav-icon" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H4V7zm0 3h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7zm5 3h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Backups</span>
+        </a>
+        <a class="nav-item" href="#/history" data-route="history">
+          <svg viewBox="0 0 24 24" class="nav-icon" aria-hidden="true"><path d="M12 7v5l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>History</span>
+        </a>
+        <a class="nav-item" href="#/options" data-route="options">
+          <svg viewBox="0 0 24 24" class="nav-icon" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+          <span>Options</span>
+        </a>
+        <a class="nav-item" href="#/about" data-route="about">
+          <svg viewBox="0 0 24 24" class="nav-icon" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zm0-13v.5m0 3V16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="8" r="0.4" fill="currentColor" stroke="currentColor" stroke-width="1"/></svg>
+          <span>About</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="gpu-chip" id="sidebar-gpu-chip" data-tip="GPU compatibility summary" tabindex="0">
+          <span class="gpu-chip-dot" id="sidebar-gpu-dot"></span>
+          <span id="sidebar-gpu-text">Checking GPU…</span>
+        </div>
+        <div class="sidebar-version" id="sidebar-version">v—</div>
+      </div>
+    </aside>
+
+    <!-- ======================= Content ======================= -->
+    <div class="content">
+      <header class="topbar">
+        <div class="topbar-title-wrap">
+          <h1 class="topbar-title" id="page-title">Games</h1>
+          <div class="topbar-subtitle" id="page-subtitle"></div>
+        </div>
+        <div class="topbar-actions" id="topbar-actions">
+          <!-- page-specific buttons injected here -->
+        </div>
+      </header>
+      <section class="page" id="page" tabindex="-1" aria-live="polite">
+        <div class="page-loading">Loading…</div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Global overlays -->
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="assertive"></div>
+
+  <!-- Shared (UMD) modules: identical files to the Node core -->
+  <script src="../shared/constants.js"></script>
+  <script src="../shared/format.js"></script>
+
+  <!-- Renderer -->
+  <script src="js/dom.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/dialog.js"></script>
+  <script src="js/pages/games.js"></script>
+  <script src="js/pages/gameDetail.js"></script>
+  <script src="js/pages/dlss5.js"></script>
+  <script src="js/pages/runtimes.js"></script>
+  <script src="js/pages/backups.js"></script>
+  <script src="js/pages/history.js"></script>
+  <script src="js/pages/options.js"></script>
+  <script src="js/pages/about.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

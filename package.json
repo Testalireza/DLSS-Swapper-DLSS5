@@ -1,0 +1,60 @@
+{
+  "name": "dlss-swapper-5",
+  "productName": "DLSS Swapper 5",
+  "version": "1.0.0",
+  "description": "DLSS / Streamline runtime manager with DLSS 5 Neural Rendering injection support. Detect games, swap DLSS runtime versions (310.6.0 - 310.9.1), back up and restore original files safely, and install DLSS 5 Neural Rendering injections via OptiScaler or ReShade.",
+  "main": "main.js",
+  "author": "Testalireza",
+  "license": "MIT",
+  "homepage": "https://github.com/Testalireza/DLSS-Swapper-DLSS5",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Testalireza/DLSS-Swapper-DLSS5.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "webdev": "node src/web/server.js",
+    "test": "node --test \"tests/*.test.js\"",
+    "test:ui": "node tests/ui-smoke.test.js",
+    "icons": "node tools/make-icons.js",
+    "seed-demo": "node tools/seed-demo.js",
+    "dist": "electron-builder --win",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^44.0.0",
+    "electron-builder": "^25.1.8",
+    "jsdom": "^30.0.1"
+  },
+  "build": {
+    "appId": "com.testalireza.dlssswapper5",
+    "productName": "DLSS Swapper 5",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "resources/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/RuntimeManifests",
+        "to": "RuntimeManifests"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "resources/icons/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
