@@ -1,0 +1,210 @@
+{
+  "$schema": "./runtimes.schema.json",
+  "schemaVersion": 1,
+  "generated": "2026-09-12",
+  "notes": [
+    "Runtime version database for DLSS Swapper 5.",
+    "Versions covered: 310.6.0 through 310.9.1.",
+    "File hashes/sizes are recorded when a package is imported or downloaded into the local Runtime Library; null means 'not yet known locally'.",
+    "Add new versions by appending an entry here (or dropping a new JSON manifest into this folder) and importing a matching package - no code changes required."
+  ],
+  "fileCatalog": {
+    "nvngx_dlss.dll": {
+      "role": "dlss-core",
+      "required": true,
+      "description": "Core DLSS upscaler runtime. This is the file that is swapped between versions."
+    },
+    "nvngx_dlssg.dll": {
+      "role": "dlss-framegen",
+      "required": false,
+      "description": "DLSS-G frame generation runtime (only used by games with native frame generation)."
+    },
+    "nvngx_dlssd.dll": {
+      "role": "dlss-rayrecon",
+      "required": false,
+      "description": "DLSS-D ray reconstruction runtime."
+    },
+    "sl.common.dll": {
+      "role": "streamline-plugin",
+      "required": false,
+      "description": "Streamline core plugin."
+    },
+    "sl.hooks.dll": {
+      "role": "streamline-plugin",
+      "required": false,
+      "description": "Streamline hooking plugin."
+    },
+    "sl.dlss_g.dll": {
+      "role": "streamline-plugin",
+      "required": false,
+      "description": "Streamline DLSS-G (frame generation) plugin."
+    },
+    "sl.reflex.dll": {
+      "role": "streamline-plugin",
+      "required": false,
+      "description": "Streamline Reflex plugin."
+    },
+    "sl.dlss.json": {
+      "role": "streamline-config",
+      "required": false,
+      "description": "Streamline DLSS plugin configuration."
+    }
+  },
+  "runtimes": [
+    {
+      "id": "310.6.0",
+      "version": "310.6.0",
+      "dlssVersion": "310.6.0",
+      "streamlineVersion": "2.11.140",
+      "channel": "stable",
+      "minimumDriver": "576.00",
+      "notes": "Baseline of the supported range. DLSS 5 neural rendering pipeline support introduced.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssg.dll", "role": "dlss-framegen", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.hooks.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss_g.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.6.1",
+      "version": "310.6.1",
+      "dlssVersion": "310.6.1",
+      "streamlineVersion": "2.11.141",
+      "channel": "stable",
+      "minimumDriver": "576.00",
+      "notes": "Stability fixes for the 310.6 branch.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.hooks.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.6.2",
+      "version": "310.6.2",
+      "dlssVersion": "310.6.2",
+      "streamlineVersion": "2.11.142",
+      "channel": "stable",
+      "minimumDriver": "576.00",
+      "notes": "Fixes ghosting artefacts reported on RTX 20 series in ray reconstruction workloads.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssd.dll", "role": "dlss-rayrecon", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.7.0",
+      "version": "310.7.0",
+      "dlssVersion": "310.7.0",
+      "streamlineVersion": "2.12.128",
+      "channel": "stable",
+      "minimumDriver": "577.00",
+      "notes": "Streamline 2.12 branch. Improved neural rendering hook stability.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssg.dll", "role": "dlss-framegen", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.hooks.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss_g.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.reflex.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.7.129",
+      "version": "310.7.129",
+      "dlssVersion": "310.7.129",
+      "streamlineVersion": "2.12.129",
+      "channel": "stable",
+      "minimumDriver": "577.00",
+      "notes": "Common game-shipped build of the 310.7 branch (frequently found in retail installs).",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.hooks.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss.json", "role": "streamline-config", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.8.0",
+      "version": "310.8.0",
+      "dlssVersion": "310.8.0",
+      "streamlineVersion": "2.13.100",
+      "channel": "stable",
+      "minimumDriver": "580.00",
+      "notes": "Streamline 2.13 branch. Adds expanded DLSS 5 neural rendering preset support.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssg.dll", "role": "dlss-framegen", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssd.dll", "role": "dlss-rayrecon", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.hooks.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss_g.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.reflex.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.8.1",
+      "version": "310.8.1",
+      "dlssVersion": "310.8.1",
+      "streamlineVersion": "2.13.101",
+      "channel": "stable",
+      "minimumDriver": "580.00",
+      "notes": "Fixes frame pacing regression with Reflex enabled on 310.8.0.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.reflex.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.9.0",
+      "version": "310.9.0",
+      "dlssVersion": "310.9.0",
+      "streamlineVersion": "2.14.100",
+      "channel": "stable",
+      "minimumDriver": "581.00",
+      "notes": "Streamline 2.14 branch. First build with full DLSS 5 neural rendering consumer API.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssg.dll", "role": "dlss-framegen", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssd.dll", "role": "dlss-rayrecon", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.hooks.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss_g.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.reflex.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss.json", "role": "streamline-config", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    },
+    {
+      "id": "310.9.1",
+      "version": "310.9.1",
+      "dlssVersion": "310.9.1",
+      "streamlineVersion": "2.14.101",
+      "channel": "stable",
+      "minimumDriver": "581.00",
+      "notes": "Latest supported runtime. Recommended target for DLSS 5 Neural Rendering workflows.",
+      "files": [
+        { "name": "nvngx_dlss.dll", "role": "dlss-core", "required": true, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssg.dll", "role": "dlss-framegen", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "nvngx_dlssd.dll", "role": "dlss-rayrecon", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.common.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.hooks.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss_g.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.reflex.dll", "role": "streamline-plugin", "required": false, "sha256": null, "sizeBytes": null },
+        { "name": "sl.dlss.json", "role": "streamline-config", "required": false, "sha256": null, "sizeBytes": null }
+      ],
+      "sources": []
+    }
+  ]
+}

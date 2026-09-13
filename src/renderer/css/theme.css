@@ -1,0 +1,142 @@
+/* ============================================================
+   DLSS Swapper 5 — theme tokens
+   Primary background: #F0F0F0   Primary accent green: #8BCA84
+   ============================================================ */
+
+:root {
+  /* --- brand --- */
+  --bg: #F0F0F0;
+  --accent: #8BCA84;
+  --accent-hover: #79C071;
+  --accent-active: #68B260;
+  --accent-soft: #E4F2E1;
+  --accent-soft-2: #D2EBCD;
+  --accent-ink: #2F6B33;          /* readable green for text on light bg */
+
+  /* --- surfaces --- */
+  --surface: #FFFFFF;
+  --surface-2: #FAFAFA;
+  --surface-3: #F5F5F5;
+  --surface-sunken: #EAEAEA;
+  --sidebar-bg: #E8E8E8;
+  --sidebar-active: #FFFFFF;
+
+  /* --- lines --- */
+  --border: #E0E0E0;
+  --border-strong: #CFCFCF;
+  --divider: #ECECEC;
+
+  /* --- text --- */
+  --text: #23271F;
+  --text-secondary: #5C6357;
+  --text-faint: #8A9083;
+  --text-on-accent: #17331A;
+
+  /* --- semantics --- */
+  --success: #4E9A55;
+  --success-bg: #E7F4E8;
+  --warning: #B57F23;
+  --warning-bg: #FBF1DC;
+  --danger: #B65149;
+  --danger-bg: #F9E7E5;
+  --info: #4A7FA5;
+  --info-bg: #E6EFF6;
+
+  /* --- misc --- */
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+  --shadow-1: 0 1px 2px rgba(30, 40, 25, 0.06), 0 1px 3px rgba(30, 40, 25, 0.08);
+  --shadow-2: 0 4px 14px rgba(30, 40, 25, 0.12);
+  --shadow-3: 0 12px 40px rgba(20, 30, 15, 0.25);
+  --focus-ring: 0 0 0 3px rgba(139, 202, 132, 0.45);
+
+  --font-ui: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Mono", "Consolas", "SF Mono", monospace;
+
+  color-scheme: light;
+}
+
+/* Dark theme (Options → Appearance) */
+html[data-theme="dark"] {
+  --bg: #1B1D1B;
+  --accent: #8BCA84;
+  --accent-hover: #9BD494;
+  --accent-active: #79C071;
+  --accent-soft: #24331F;
+  --accent-soft-2: #2C3D26;
+  --accent-ink: #A8D8A0;
+
+  --surface: #232623;
+  --surface-2: #262926;
+  --surface-3: #2A2E2A;
+  --surface-sunken: #1F221F;
+  --sidebar-bg: #202320;
+  --sidebar-active: #2C302C;
+
+  --border: #343834;
+  --border-strong: #434843;
+  --divider: #2E322E;
+
+  --text: #E8EBE4;
+  --text-secondary: #A9B0A3;
+  --text-faint: #7C8377;
+  --text-on-accent: #17331A;
+
+  --success: #7CC47F;
+  --success-bg: #21311F;
+  --warning: #D9A441;
+  --warning-bg: #33291A;
+  --danger: #D97C73;
+  --danger-bg: #37221F;
+  --info: #7FA9C9;
+  --info-bg: #1E2A33;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 12px 40px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+}
+
+/* --- base --- */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden; /* the app shell owns scrolling (content area) */
+}
+
+::selection { background: var(--accent-soft-2); }
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+/* Natural, unobtrusive scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background-color: var(--text-faint); }
+*::-webkit-scrollbar-track { background: transparent; }

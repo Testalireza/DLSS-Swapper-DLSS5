@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+build/
+
+# Local app data (demo seeding, dev runs)
+.dlss5swapper-data/
+*.local.json
+
+# Logs
+*.log
+logs/
+
+# OS cruft
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
