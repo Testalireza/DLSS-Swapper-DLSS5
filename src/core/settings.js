@@ -44,6 +44,10 @@ const DEFAULTS = Object.freeze({
   verboseLogging: false,
   gpuCompatibilityOverride: false, // advanced: proceed despite unverified GPU
 
+  // Saved DLSS profiles for batch apply:
+  // [{ id, name, runtimeVersion|null, injectionId|null, method }]
+  dlssProfiles: [],
+
   // Runtime sources (providers)
   runtimeSources: {
     github: {

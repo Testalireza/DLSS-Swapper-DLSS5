@@ -252,6 +252,11 @@ function makeFakeWorld() {
         message: 'Proxy DLL d3d11.dll (unknown tool) sits next to the executable.',
       }],
     }),
+    // Elden Ring installs cleanly; Cyberpunk has a proxy DLL that needs review.
+    [IPC.OPS_INSTALL_RUNTIME]: (p) => (p.gameId === 'steam-1245620' || p.skipConflictWarnings
+      ? { ok: true, fromVersion: '310.6.0', toVersion: p.version, backupId: 'b-1', steps: [] }
+      : { ok: false, code: 'needs-conflict-confirmation', conflicts: [{ file: 'd3d11.dll', severity: 'warning' }] }),
+    [IPC.INJECTIONS_INSTALL]: () => ({ ok: true, installedFiles: ['nvngx.dll'], iniEdits: [], steps: [] }),
     [IPC.HISTORY_LIST]: () => JSON.parse(JSON.stringify(history)),
     [IPC.HISTORY_GET]: (p) => JSON.parse(JSON.stringify(history.find((h) => h.id === p.id) || history[0])),
     [IPC.FS_PICK_FOLDER]: () => ({ canceled: true }),
@@ -285,6 +290,7 @@ describe('UI smoke — renderer (jsdom)', { skip: !JSDOM && 'jsdom not installed
     'src/renderer/js/api.js',
     'src/renderer/js/toast.js',
     'src/renderer/js/dialog.js',
+    'src/renderer/js/batchApply.js',
     'src/renderer/js/pages/games.js',
     'src/renderer/js/pages/gameDetail.js',
     'src/renderer/js/pages/dlss5.js',
@@ -424,6 +430,77 @@ describe('UI smoke — renderer (jsdom)', { skip: !JSDOM && 'jsdom not installed
     window.UI.applyTheme();
     assert.equal(res2.settings.scan.steam, false);
     assert.equal(document.documentElement.getAttribute('data-theme'), 'light');
+  });
+
+  test('games page: multi-select and apply one DLSS profile to several games', async () => {
+    // One complete runtime so the profile has something to install.
+    window.UI.state.runtimes = {
+      runtimes: [{ version: '310.9.1', available: true, complete: true, missing: [] }],
+      loadErrors: [], providers: [],
+    };
+    window.location.hash = '#/games';
+    await tick(150);
+    const topbarBtn = (re) => Array.from(document.querySelectorAll('#topbar-actions .btn')).find((b) => re.test(b.textContent));
+    topbarBtn(/Select games/).click();
+    await tick(120);
+
+    const page = document.getElementById('page');
+    assert.ok(page.querySelector('.selection-bar'), 'selection bar shown in select mode');
+    const cards = () => Array.from(page.querySelectorAll('.game-card'));
+    assert.equal(cards().length, 2);
+    assert.ok(cards().every((c) => c.getAttribute('aria-pressed') === 'false'));
+    for (const c of cards()) { c.click(); await tick(20); }
+    assert.equal(window.location.hash, '#/games', 'clicking a card in select mode must not navigate');
+    assert.match(page.querySelector('.selection-bar').textContent, /2 selected/);
+    assert.ok(cards().every((c) => c.classList.contains('selected')));
+
+    const applyBtn = Array.from(page.querySelectorAll('.selection-bar .btn')).find((b) => /Apply DLSS profile to 2/.test(b.textContent));
+    assert.ok(applyBtn && !applyBtn.disabled, 'apply button enabled');
+    applyBtn.click();
+    await tick(120);
+
+    let modal = document.querySelector('#modal-root .modal-backdrop:last-child');
+    assert.match(modal.textContent, /Apply DLSS profile to 2 game\(s\)/);
+    const runtimeSel = modal.querySelector('select[aria-label="DLSS runtime version"]');
+    assert.equal(runtimeSel.value, '310.9.1', 'newest complete runtime preselected');
+    const injSel = modal.querySelector('select[aria-label="DLSS 5 injection package"]');
+    injSel.value = 'dlss5-nr-optiscaler';
+    injSel.dispatchEvent(new window.Event('change'));
+
+    // Save it as a named profile through the settings pipeline.
+    modal.querySelector('input[type="text"]').value = 'Latest + DLSS 5';
+    Array.from(modal.querySelectorAll('.btn')).find((b) => /Save profile/.test(b.textContent)).click();
+    await tick(80);
+    assert.equal(world.settings.dlssProfiles.length, 1);
+    assert.deepEqual(
+      { ...world.settings.dlssProfiles[0], id: undefined },
+      { id: undefined, name: 'Latest + DLSS 5', runtimeVersion: '310.9.1', injectionId: 'dlss5-nr-optiscaler', method: 'optiscaler' }
+    );
+
+    const callsBefore = world.calls.length;
+    modal.querySelector('.modal-footer .btn-primary').click();
+    await tick(250);
+
+    modal = document.querySelector('#modal-root .modal-backdrop:last-child');
+    assert.match(modal.textContent, /Finished — 1 succeeded, 1 skipped, 0 failed/);
+    const batchCalls = world.calls.slice(callsBefore);
+    assert.equal(batchCalls.filter((c) => c === IPC.OPS_INSTALL_RUNTIME).length, 2, 'runtime installed per game');
+    assert.equal(batchCalls.filter((c) => c === IPC.INJECTIONS_INSTALL).length, 1, 'injection skipped after a conflict skip');
+    assert.match(modal.textContent, /conflicts need review \(d3d11\.dll\)/);
+    const close = modal.querySelector('.modal-footer .btn');
+    assert.equal(close.disabled, false);
+    close.click();
+    await tick(60);
+
+    // The skipped game stays selected for a retry.
+    assert.match(page.querySelector('.selection-bar').textContent, /1 selected/);
+    const still = cards().filter((c) => c.classList.contains('selected')).map((c) => c.textContent);
+    assert.equal(still.length, 1);
+    assert.match(still[0], /Cyberpunk 2077/);
+
+    topbarBtn(/Cancel selection/).click();
+    await tick(120);
+    assert.ok(!document.querySelector('#page .selection-bar'), 'selection bar hidden after leaving select mode');
   });
 
   test('confirm dialog resolves with the primary button value', async () => {

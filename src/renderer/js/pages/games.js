@@ -15,6 +15,8 @@
   let cardRefs = new Map(); // gameId → card element
   let unsubLoading = null;
   let unsubScan = null;
+  let selectMode = false;
+  const selected = new Set(); // gameIds picked for a batch profile apply
 
   function providerLabel(p) {
     return { steam: 'Steam', epic: 'Epic Games', xbox: 'Xbox / MS Store', gog: 'GOG', manual: 'Manual', folder: 'Custom folder' }[p] || p;
@@ -41,14 +43,18 @@
   function gameCard(game) {
     const nameEl = el('div.game-card-name', game.name);
     const metaEl = el('div.game-card-meta', [badge('analyzing…')]);
-    const card = el('button.game-card.card', {
+    const isSelected = selected.has(game.id);
+    const card = el(`button.game-card.card${selectMode ? '.selectable' : ''}${isSelected ? '.selected' : ''}`, {
       onclick: (e) => {
         if (e.target.closest('.game-card-actions')) return;
+        if (selectMode) { toggleSelected(game.id); return; }
         window.UI.navigate(`#/game/${encodeURIComponent(game.id)}`);
       },
-      'aria-label': `Open ${game.name}`,
+      'aria-label': selectMode ? `Select ${game.name}` : `Open ${game.name}`,
+      'aria-pressed': selectMode ? String(isSelected) : null,
     }, [
-      el('div.game-card-actions', [
+      selectMode ? el('span.game-card-check', { 'aria-hidden': 'true' }, isSelected ? '✓' : '') : null,
+      selectMode ? null : el('div.game-card-actions', [
         btn('🗀', {
           size: 'sm', kind: 'ghost', tip: 'Open install folder', ariaLabel: `Open folder of ${game.name}`,
           onclick: () => api.openPath(game.installDir),
@@ -154,11 +160,59 @@
     }
   }
 
+  function toggleSelected(gameId) {
+    if (selected.has(gameId)) selected.delete(gameId);
+    else selected.add(gameId);
+    renderRouteNow();
+  }
+
+  function setSelectMode(on) {
+    selectMode = on;
+    if (!on) selected.clear();
+    window.UI.navigate('#/games'); // re-render topbar + grid
+  }
+
+  async function applyProfileToSelection() {
+    const ids = [...selected];
+    const results = await window.UI.batchApply.open(ids);
+    if (!results) return;
+    // Keep games that did not fully succeed selected so they can be retried.
+    selected.clear();
+    for (const r of results) if (r.status !== 'done') selected.add(r.game.id);
+    renderRouteNow();
+  }
+
+  function selectionBar(visibleGames) {
+    // Drop selections for games that left the library.
+    for (const id of [...selected]) if (!window.UI.state.games.some((g) => g.id === id)) selected.delete(id);
+    const allVisibleSelected = visibleGames.length > 0 && visibleGames.every((g) => selected.has(g.id));
+    return el('div.selection-bar', { role: 'toolbar', 'aria-label': 'Batch selection' }, [
+      el('strong', `${selected.size} selected`),
+      btn(allVisibleSelected ? 'Deselect shown' : `Select all shown (${visibleGames.length})`, {
+        size: 'sm',
+        onclick: () => {
+          for (const g of visibleGames) { if (allVisibleSelected) selected.delete(g.id); else selected.add(g.id); }
+          renderRouteNow();
+        },
+      }),
+      btn('Clear', { size: 'sm', kind: 'ghost', disabled: !selected.size, onclick: () => { selected.clear(); renderRouteNow(); } }),
+      el('span.spacer'),
+      btn(`🎛️ Apply DLSS profile${selected.size ? ` to ${selected.size}` : ''}…`, {
+        kind: 'primary',
+        disabled: !selected.size,
+        onclick: applyProfileToSelection,
+        tip: 'Swap the DLSS runtime and/or install a DLSS 5 injection in every selected game',
+      }),
+      btn('Done', { size: 'sm', onclick: () => setSelectMode(false) }),
+    ]);
+  }
+
   function renderGrid(container) {
+    const games = sortGames(filterGames(window.UI.state.games));
+    if (selectMode) container.appendChild(selectionBar(games));
     const grid = el('div.card-grid');
     container.appendChild(grid);
     cardRefs = new Map();
-    const games = sortGames(filterGames(window.UI.state.games));
     if (!games.length) {
       const anyGames = window.UI.state.games.length > 0;
       grid.appendChild(el('div.empty-state', { style: 'grid-column: 1 / -1' }, [
@@ -211,6 +265,10 @@
           searchInput,
         ]),
         sortSelect,
+        btn(selectMode ? '✕ Cancel selection' : '☑ Select games', {
+          onclick: () => setSelectMode(!selectMode),
+          tip: 'Pick several games and apply one DLSS profile to all of them',
+        }),
         btn('⟳ Rescan', { onclick: () => ctx.scanGames().then(() => renderRouteNow()), tip: 'Re-run all enabled game detectors (F5)' }),
         btn('➕ Add game', { kind: 'primary', onclick: addGameDialog }),
       ];
